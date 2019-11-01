@@ -50,7 +50,6 @@ app.use(
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 )
-require('./passport')(app)
 
 app.use('/api', require('./routes/index'))
 
