@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { Route, Link, NavLink, Switch } from 'react-router-dom'
 import Home from './pages/Home'
-import api from '../api'
 import logo from '../logo.svg'
+
+import api from '../api'
 
 export default class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       app: [],
+      splitApps: [],
     }
   }
 
@@ -20,6 +22,7 @@ export default class App extends Component {
     api
       .getApps()
       .then(app => {
+        console.log(app.length / 20)
         this.setState({
           app: app,
         })
