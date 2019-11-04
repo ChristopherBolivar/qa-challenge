@@ -8,9 +8,28 @@ export default class One extends Component {
       app: [],
     }
   }
+  // componentWillReceiveProps() {
+  //   if (this.props.limit >= 1) {
+  //     api
+  //       .getApps({ start: this.props.start, end: this.props.limit })
+  //       .then(app => {
+  //         this.setState({
+  //           app: app,
+  //         })
+  //       })
+  //       .catch(err => console.log(err))
+  //   }
+
+  // }
   componentDidMount() {
+    let int = setInterval(() => this.getUserState(), 100)
+    this.setState({ int })
+  }
+
+  getUserState = () => {
+    console.log('in here', this.state)
     api
-      .getApps({ start: 0, end: 20 })
+      .getApps({ start: this.props.start, end: this.props.limit })
       .then(app => {
         this.setState({
           app: app,
@@ -18,21 +37,27 @@ export default class One extends Component {
       })
       .catch(err => console.log(err))
   }
+
   displayApps = () => {
     if (this.state.app.length >= 1) {
       return this.state.app.map(app => {
         return (
-          <div className="col-4">
+          <div key={app.name} className="col-4">
             <p>{app.name}</p>
           </div>
         )
       })
     } else {
-      return <p>sorry</p>
+      return (
+        <div className="text-center">
+          <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      )
     }
   }
   render() {
-    console.log(this.state.app, 'page 1')
     return (
       <div>
         <div className="container">

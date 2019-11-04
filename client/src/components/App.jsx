@@ -9,7 +9,7 @@ export default class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      app: [],
+      apps: [],
       splitApps: [],
     }
   }
@@ -21,21 +21,23 @@ export default class App extends Component {
   componentDidMount() {
     api
       .getApps()
-      .then(app => {
-        console.log(app.length / 20)
+      .then(apps => {
+        console.log(apps.length / 20)
         this.setState({
-          app: app,
+          apps: apps,
         })
       })
       .catch(err => console.log(err))
   }
 
   render() {
-    console.log(this.state.app)
     return (
       <div className="App">
         <Switch>
-          <Route path="/" exact component={Home} />
+          <Route
+            path="/"
+            component={props => <Home {...props} apps={this.state.apps} />}
+          />
           <Route render={() => <h2>404</h2>} />
         </Switch>
       </div>

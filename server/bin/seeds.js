@@ -8,7 +8,7 @@ require('../configs/database')
 
 let generateJSON = () => {
   let appArray = []
-  for (let i = 1; i <= 200; i++) {
+  for (let i = 1; i <= 1000; i++) {
     appArray.push({
       id: Number(i),
       name: `my-app-${i}`,

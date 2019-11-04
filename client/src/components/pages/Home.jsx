@@ -4,49 +4,64 @@ import Two from './Two'
 import Three from './Three'
 import Four from './Four'
 import Five from './Five'
-
 import api from '../../api'
 
 export default class Home extends Component {
   constructor(props) {
     super(props)
+    console.log('hello')
     this.state = {
-      page: <One />,
+      limit: 0,
+      start: 0,
+      page: <One limit={20} start={0} />,
+      apps: [],
     }
   }
-  renderPage = e => {
-    console.log(e.target.value)
-    switch (Number(e.target.value)) {
-      case 1:
+
+  componentDidMount() {
+    api
+      .getApps()
+      .then(apps => {
         this.setState({
-          page: <One />,
+          apps: apps,
         })
-        break
-      case 2:
-        this.setState({
-          page: <Two />,
-        })
-        break
-      case 3:
-        this.setState({
-          page: <Three />,
-        })
-        break
-      case 4:
-        this.setState({
-          page: <Four />,
-        })
-        break
-      case 5:
-        this.setState({
-          page: <Five />,
-        })
-        break
-      default:
-        this.setState({
-          page: <One />,
-        })
+      })
+      .catch(err => console.log(err))
+  }
+
+  displayPaginationNav = () => {
+    let numOfPages
+    let navItems = []
+    console.log(this.state.apps.length)
+    if (this.state.apps.length > 50) {
+      numOfPages = this.state.apps.length / 20
+      for (let i = 1; i <= numOfPages; i++) {
+        navItems.push(i)
+      }
+      return navItems.map(number => {
+        return (
+          <input
+            className="mx-auto text-center"
+            key={number}
+            type="submit"
+            value={number}
+            onClick={this.renderPage}
+            className="btn"
+          />
+        )
+      })
     }
+  }
+
+  renderPage = e => {
+    console.log(e.target.parentNode.childElementCount, '=-=--=')
+    let limit = this.state.apps.length / e.target.parentNode.childElementCount
+    let start = limit * e.target.value - limit
+    this.setState({ limit, start })
+    console.log(limit, start, '=-=--=')
+    this.setState({
+      page: <One limit={limit} start={start} />,
+    })
   }
 
   render() {
@@ -54,37 +69,11 @@ export default class Home extends Component {
       <div className="Home">
         <h2>Directory Of Apps</h2>
         <div id="content">{this.state.page}</div>
-        <input
-          type="submit"
-          value="1"
-          onClick={this.renderPage}
-          className="btn"
-        />
-
-        <input
-          type="submit"
-          value="2"
-          onClick={this.renderPage}
-          className="btn"
-        />
-        <input
-          type="submit"
-          value="3"
-          onClick={this.renderPage}
-          className="btn"
-        />
-        <input
-          type="submit"
-          value="4"
-          onClick={this.renderPage}
-          className="btn"
-        />
-        <input
-          type="submit"
-          value="5"
-          onClick={this.renderPage}
-          className="btn"
-        />
+        <div className="container mx-auto text-center">
+          <div className="row mx-auto text-center">
+            {this.displayPaginationNav()}
+          </div>
+        </div>
       </div>
     )
   }

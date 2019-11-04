@@ -10,7 +10,7 @@ export default class One extends Component {
   }
   componentDidMount() {
     api
-      .getApps({ start: 20, end: 40 })
+      .getApps({ start: 20, end: 30 })
       .then(app => {
         this.setState({
           app: app,
